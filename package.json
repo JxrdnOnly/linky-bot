@@ -1,0 +1,23 @@
+{
+  "name": "linky",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolyli/linky.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rolyli/linky/issues"
+  },
+  "homepage": "https://github.com/rolyli/linky#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "mongoose": "^5.11.15"
+  }
+}

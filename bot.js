@@ -1,17 +1,29 @@
+const Message = require("./models/message");
 const Discord = require("discord.js");
 
 const client = new Discord.Client();
 
-client.on("ready", () => {
-  console.log("I am ready!");
+client.once("ready", () => {
+  console.log("Started discord attachment scraper");
 });
 
-client.on("message", (message) => {
-  if (message.content === "ping") {
-    message.reply("pong");
-  }
+client.on("message", (discordMessage) => {
+  let urlList = [];
+  discordMessage.attachments.forEach((attachment) =>
+    urlList.push(attachment.url)
+  );
+
+  const message = new Message({
+    attachments: urlList,
+    date: new Date(),
+  });
+
+  message.save((error, message) => {
+    if (error) {
+      console.error(error);
+    }
+    console.log(message);
+  });
 });
 
-// THIS  MUST  BE  THIS  WAY
-
-client.login(process.env.BOT_TOKEN); //BOT_TOKEN is the Client Secret
+client.login(process.env.BOT_TOKEN);
