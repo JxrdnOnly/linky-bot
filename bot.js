@@ -1,4 +1,4 @@
-const Message = require("./models/message");
+const Post = require("./models/post");
 const Discord = require("discord.js");
 
 const client = new Discord.Client();
@@ -13,16 +13,16 @@ client.on("message", (discordMessage) => {
     urlList.push(attachment.url)
   );
 
-  const message = new Message({
+  const post = new Post({
     attachments: urlList,
     date: new Date(),
   });
 
-  message.save((error, message) => {
+  post.save((error, post) => {
     if (error) {
       console.error(error);
     }
-    console.log(message);
+    console.log(post);
   });
 });
 
