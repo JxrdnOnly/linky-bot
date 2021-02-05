@@ -26,16 +26,17 @@ client.once("ready", () => {
   console.log("Started discord attachment scraper");
 });
 
-if (process.env.CHANNEL_LIST) {
-  channels = process.env.CHANNEL_LIST.split(" ");
-
-  client.on("message", (discordMessage) => {
-    if (channels.includes(discordMessage.channel.id)) {
+client.on("message", (discordMessage) => {
+  if (discordMessage.attachments) {
+    if (process.env.CHANNEL_LIST && ) {
+      channels = process.env.CHANNEL_LIST.split(" ");
+      if (channels.includes(discordMessage.channel.id)) {
+        savePost(discordMessage);
+      }
+    } else {
       savePost(discordMessage);
     }
-  });
-} else {
-  client.on("message", (discordMessage) => savePost(discordMessage));
-}
+  } 
+});
 
 client.login(process.env.BOT_TOKEN);
