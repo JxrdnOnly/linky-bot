@@ -28,7 +28,7 @@ client.once("ready", () => {
 
 client.on("message", (discordMessage) => {
   if (discordMessage.attachments) {
-    if (process.env.CHANNEL_LIST && ) {
+    if (process.env.CHANNEL_LIST) {
       channels = process.env.CHANNEL_LIST.split(" ");
       if (channels.includes(discordMessage.channel.id)) {
         savePost(discordMessage);
