@@ -27,7 +27,8 @@ client.once("ready", () => {
 });
 
 client.on("message", (discordMessage) => {
-  if (discordMessage.attachments) {
+
+  if (discordMessage.attachments == null) {
     if (process.env.CHANNEL_LIST) {
       channels = process.env.CHANNEL_LIST.split(" ");
       if (channels.includes(discordMessage.channel.id)) {
@@ -39,4 +40,11 @@ client.on("message", (discordMessage) => {
   } 
 });
 
+client.on("messageUpdate", function(oldMessage, newMessage){
+  console.log(`a message is updated`, newMessage);
+});
+
+//todo: delete mongodb entry when discord message is deleted
+
 client.login(process.env.BOT_TOKEN);
+
