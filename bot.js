@@ -3,15 +3,22 @@ const Discord = require("discord.js");
 
 const client = new Discord.Client();
 
-const savePost = (discordMessage) => {
+twitterRegex = /https:\/\/twitter[^ \n]*/g;
+
+
+const prepareUrlList = (discordMessage) => {
   let urlList = [];
   discordMessage.attachments.forEach((attachment) =>
     urlList.push(attachment.url)
   );
+  return urlList
+}
 
+const savePost = (urlList, urlType) => {
   const post = new Post({
     attachments: urlList,
     date: new Date(),
+    urlType
   });
 
   post.save((error, post) => {
@@ -27,21 +34,21 @@ client.once("ready", () => {
 });
 
 client.on("message", (discordMessage) => {
-
-  if (discordMessage.attachments == null) {
+  if (discordMessage.attachments.size > 0) {
     if (process.env.CHANNEL_LIST) {
       channels = process.env.CHANNEL_LIST.split(" ");
       if (channels.includes(discordMessage.channel.id)) {
-        savePost(discordMessage);
+        savePost(prepareUrlList(discordMessage), "discord");
       }
     } else {
-      savePost(discordMessage);
+      savePost(prepareUrlList(discordMessage), "discord");
     }
   } 
-});
 
-client.on("messageUpdate", function(oldMessage, newMessage){
-  console.log(`a message is updated`, newMessage);
+  if (discordMessage.content.match(twitterRegex)) {
+    let urlList = discordMessage.content.match(twitterRegex);
+    savePost(urlList, "twitter")
+  }
 });
 
 //todo: delete mongodb entry when discord message is deleted
