@@ -13,16 +13,10 @@ CHANNEL_LIST = string with channel ids seperated by a space (optional as default
 
 ## Message schema
 
-Message schema contains two fields
-
-```
-const message = new Message({
-  attachments: urlList,
-  date: new Date(),
-});
-```
+Message schema contains following fields
 
 ```
 attachments: array of attachment urls retrieved
 date: new date object
+urlType: 'discord' or 'twitter'
 ```
