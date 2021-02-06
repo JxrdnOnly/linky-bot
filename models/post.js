@@ -13,6 +13,7 @@ db.once("open", function () {
 });
 
 const postSchema = new mongoose.Schema({
+  id: String,
   attachments: Array,
   date: Date,
   urlType: String,

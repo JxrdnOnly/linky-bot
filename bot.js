@@ -14,8 +14,9 @@ const prepareUrlList = (discordMessage) => {
   return urlList
 }
 
-const savePost = (urlList, urlType) => {
+const savePost = (urlList, urlType, id) => {
   const post = new Post({
+    id,
     attachments: urlList,
     date: new Date(),
     urlType
@@ -38,17 +39,24 @@ client.on("message", (discordMessage) => {
     if (process.env.CHANNEL_LIST) {
       channels = process.env.CHANNEL_LIST.split(" ");
       if (channels.includes(discordMessage.channel.id)) {
-        savePost(prepareUrlList(discordMessage), "discord");
+        savePost(prepareUrlList(discordMessage), "discord", discordMessage.id);
       }
     } else {
-      savePost(prepareUrlList(discordMessage), "discord");
+      savePost(prepareUrlList(discordMessage), "discord", discordMessage.id);
     }
   } 
 
   if (discordMessage.content.match(twitterRegex)) {
     let urlList = discordMessage.content.match(twitterRegex);
-    savePost(urlList, "twitter")
+    savePost(urlList, "twitter", discordMessage.id)
   }
+});
+
+client.on("messageDelete", function(message){
+  Post.deleteMany({id: message.id}, (err) => {
+    if(err) console.log(err);
+    console.log("Successful deletion");
+  })
 });
 
 //todo: delete mongodb entry when discord message is deleted
