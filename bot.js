@@ -5,21 +5,20 @@ const client = new Discord.Client();
 
 twitterRegex = /https:\/\/twitter[^ \n]*/g;
 
-
 const prepareUrlList = (discordMessage) => {
   let urlList = [];
   discordMessage.attachments.forEach((attachment) =>
     urlList.push(attachment.url)
   );
-  return urlList
-}
+  return urlList;
+};
 
 const savePost = (urlList, urlType, id) => {
   const post = new Post({
     id,
     attachments: urlList,
     date: new Date(),
-    urlType
+    urlType,
   });
 
   post.save((error, post) => {
@@ -44,22 +43,35 @@ client.on("message", (discordMessage) => {
     } else {
       savePost(prepareUrlList(discordMessage), "discord", discordMessage.id);
     }
-  } 
+  }
 
   if (discordMessage.content.match(twitterRegex)) {
-    let urlList = discordMessage.content.match(twitterRegex);
-    savePost(urlList, "twitter", discordMessage.id)
+    if (process.env.CHANNEL_LIST) {
+      channels = process.env.CHANNEL_LIST.split(" ");
+      if (channels.includes(discordMessage.channel.id)) {
+        savePost(
+          discordMessage.content.match(twitterRegex),
+          "twitter",
+          discordMessage.id
+        );
+      }
+    } else {
+      savePost(
+        discordMessage.content.match(twitterRegex),
+        "twitter",
+        discordMessage.id
+      );
+    }
   }
 });
 
-client.on("messageDelete", function(message){
-  Post.deleteMany({id: message.id}, (err) => {
-    if(err) console.log(err);
+client.on("messageDelete", function (message) {
+  Post.deleteMany({ id: message.id }, (err) => {
+    if (err) console.log(err);
     console.log("Successful deletion");
-  })
+  });
 });
 
 //todo: delete mongodb entry when discord message is deleted
 
 client.login(process.env.BOT_TOKEN);
-
