@@ -83,7 +83,7 @@ client.on("message", async (discordMessage) => {
         if (channels.includes(discordMessage.channel.id)) {
           let format = {
             id: discordMessage.id,
-            attachments: tweet.data,
+            attachments: tweet.data.includes.media.map((media) => (media.url)),
           };
   
           saveTwitterPost(format);
@@ -91,7 +91,7 @@ client.on("message", async (discordMessage) => {
       } else {
         let format = {
           id: discordMessage.id,
-          attachments: tweet.data,
+          attachments: tweet.data.includes.media.map((media) => (media.url)),
         };
   
         saveTwitterPost(format);

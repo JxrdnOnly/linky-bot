@@ -16,7 +16,6 @@ const postSchema = new mongoose.Schema({
   id: String,
   attachments: Array,
   date: Date,
-  url: String,
   urlType: String,
 });
 
