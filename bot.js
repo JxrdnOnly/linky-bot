@@ -28,12 +28,15 @@ const savePost = (urlList, urlType, id) => {
   });
 };
 
-const saveTwitterPost = ({ id, attachments }) => {
+const saveTwitterPost = ({ id, attachments, source, text, author }) => {
   const post = new Post({
     id,
     attachments: attachments,
     date: new Date(),
     urlType: "twitter",
+    author,
+    text,
+    source
   });
 
   post.save((error, post) => {
@@ -71,29 +74,25 @@ client.on("message", async (discordMessage) => {
         const tweetId = tweetUrl.match(tweetIdRegex)[1];
         let authStr = "Bearer ".concat(process.env.BEARER_TOKEN);
         return await axios.get(
-          `https://api.twitter.com/2/tweets/${tweetId}?tweet.fields=entities&expansions=attachments.media_keys&media.fields=url`,
+          `https://api.twitter.com/2/tweets/${tweetId}?tweet.fields=entities&expansions=attachments.media_keys,author_id&media.fields=url`,
           { headers: { Authorization: authStr } }
         );
       })
     );
 
     tweets.map((tweet) => {
+      let format = {
+        id: discordMessage.id,
+        attachments: tweet.data.includes.media.map((media) => (media.url)),
+        text: tweet.data.data.text,
+      };
+
       if (process.env.CHANNEL_LIST) {
         channels = process.env.CHANNEL_LIST.split(" ");
         if (channels.includes(discordMessage.channel.id)) {
-          let format = {
-            id: discordMessage.id,
-            attachments: tweet.data.includes.media.map((media) => (media.url)),
-          };
-  
           saveTwitterPost(format);
         }
       } else {
-        let format = {
-          id: discordMessage.id,
-          attachments: tweet.data.includes.media.map((media) => (media.url)),
-        };
-  
         saveTwitterPost(format);
       }
     })

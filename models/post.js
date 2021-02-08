@@ -17,6 +17,7 @@ const postSchema = new mongoose.Schema({
   attachments: Array,
   date: Date,
   urlType: String,
+  text: String,
 });
 
 module.exports = mongoose.model("Post", postSchema);
