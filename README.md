@@ -2,10 +2,10 @@
 Linky is a discord bot that runs on NodeJS. It scrapes image urls from Discord messages, and saves them to MongoDB. It uses`discord.js` and `mongoose` as dependencies.
 
 Currently supported formats for urls:
-```
-discord messages with native image attachments
-twitter.com tweets
-```
+
+- Discord messages with native image attachments
+- Twitter
+
 
 ## Setup
 
