@@ -1,10 +1,14 @@
-# linky
-Linky is a discord bot that runs on NodeJS. It scrapes image urls from Discord messages, and saves them to MongoDB. It uses`discord.js` and `mongoose` as dependencies.
+# linky-bot
+linky-bot is a discord bot that runs on NodeJS. It scrapes image Discord messages and saves them to MongoDB.
+
+More specifically, linky-bot listens for discord messages that include twitter links, or discord image attachments, and saves them to persistent storage. linky-bot will also delete entries in persistent storage on message delete event triggered by a discord user within the channel.
 
 Currently supported formats for urls:
 
 - Discord messages with native image attachments
-- Twitter
+- Twitter (multiple twitter links can be regex matched within a single message, as long as they are seperated by a newline or a space)
+
+
 
 
 ## Setup
@@ -23,6 +27,7 @@ TOKEN_BEARER = token bearer string for twitter api
 Message schema contains following fields
 
 ```
+id: discord message id
 attachments: array of attachment urls retrieved
 date: new date object
 urlType: 'discord' or 'twitter'
